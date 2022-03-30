@@ -34,7 +34,6 @@ void serial_init_gps(GPS_t * gps_t,
 
   #ifdef USE_SOFTWARE_SERIAL
     gps_t->serial_gps_handle->begin(GPS_BAUD_RATE, SWSERIAL_8N1, GPS_SOFT_SER_RX, GPS_SOFT_SER_TX, INVERT_LOGIC, BUF_SIZE);
-    gps_t->serial_gps_handle->enableIntTx(false); // high speed half duplex, turn off interrupts during tx
   #else
     gps_t->serial_gps_handle->begin(GPS_BAUD_RATE, SERIAL_8N1, GPS_SER_RX, GPS_SER_TX);
   #endif // USE_SOFTWARE_SERIAL

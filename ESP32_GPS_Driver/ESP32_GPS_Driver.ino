@@ -20,7 +20,7 @@
 #ifdef USE_SOFTWARE_SERIAL
   SoftwareSerial serial_port; // Make sure to configure the corresponding pins in GPS.h
 #else
-  HardwareSerial serial_port(2); // Make sure to configure the corresponding pins in GPS.h (Serial0 -> 03, 01; Serial1 -> 16, 17; Serial2 -> 26, 27)
+  HardwareSerial serial_port(2); // Make sure to configure the corresponding pins in GPS.h ({RX, TX} :: Serial0 -> 03, 01; Serial1 -> 17, 16; Serial2 -> 27, 26)
 #endif // USE_SOFTWARE_SERIAL
 
 TinyGPSPlus gps;

@@ -21,12 +21,12 @@
     #include <SoftwareSerial.h> // https://github.com/plerup/espsoftwareserial
     #define INVERT_LOGIC            false // https://github.com/plerup/espsoftwareserial/blob/eb4b29074b75eacac3585bf84b5495b8f80a92cf/src/SoftwareSerial.h#L97
     #define BUF_SIZE                256
-    #define GPS_SOFT_SER_RX         26
-    #define GPS_SOFT_SER_TX         27
+    #define GPS_SOFT_SER_RX         27
+    #define GPS_SOFT_SER_TX         26
   #else
     #include <HardwareSerial.h>
-    #define GPS_SER_RX              26
-    #define GPS_SER_TX              27
+    #define GPS_SER_RX              27
+    #define GPS_SER_TX              26
   #endif // USE_SOFTWARE_SERIAL
   
   #include <TinyGPS++.h>
