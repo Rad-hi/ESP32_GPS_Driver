@@ -14,13 +14,24 @@
 
 #ifndef __GPS_H__
   #define __GPS_H__
- 
-  #include <HardwareSerial.h>
+
+  #define USE_SOFTWARE_SERIAL
+
+  #ifdef USE_SOFTWARE_SERIAL
+    #include <SoftwareSerial.h> // https://github.com/plerup/espsoftwareserial
+    #define INVERT_LOGIC            false // https://github.com/plerup/espsoftwareserial/blob/eb4b29074b75eacac3585bf84b5495b8f80a92cf/src/SoftwareSerial.h#L97
+    #define BUF_SIZE                256
+    #define GPS_SOFT_SER_RX         26
+    #define GPS_SOFT_SER_TX         27
+  #else
+    #include <HardwareSerial.h>
+    #define GPS_SER_RX              26
+    #define GPS_SER_TX              27
+  #endif // USE_SOFTWARE_SERIAL
+  
   #include <TinyGPS++.h>
 
   /* GPS config params */
-  #define GPS_SER_RX              26
-  #define GPS_SER_TX              27        
   #define GPS_BAUD_RATE           9600      
 
   /* GPS error codes */
@@ -31,7 +42,12 @@
   
   /* Config container */
   typedef struct{
-    HardwareSerial * serial_gps_handle;
+    #ifdef USE_SOFTWARE_SERIAL
+      SoftwareSerial * serial_gps_handle;
+    #else
+      HardwareSerial * serial_gps_handle;
+    #endif // USE_SOFTWARE_SERIAL
+    
     TinyGPSPlus * gps;
   }GPS_t;
 
@@ -55,13 +71,21 @@
   }DATETIME_t;
 
   /* Functions */
-  void serial_init_gps(GPS_t * gps_t, TinyGPSPlus * gps_, HardwareSerial * serial_port);
+  void serial_init_gps(GPS_t * gps_t, 
+                       TinyGPSPlus * gps_, 
+                       #ifdef USE_SOFTWARE_SERIAL
+                         SoftwareSerial * serial_port
+                       #else
+                         HardwareSerial * serial_port
+                       #endif // USE_SOFTWARE_SERIAL
+                       );
   
   uint8_t serial_read_gps(GPS_t * gps_t, LOCATION_t * loc, DATETIME_t * datetime, float * distance);
-  
   void serial_distance_from_to_gps(LOCATION_t * from_, LOCATION_t * to_, float * distance);
-
+  
   void serial_put_to_sleep_gps(GPS_t * gps_t);
   void serial_wake_up_gps(GPS_t * gps_t);
+
+  void serial_clean_buffer_gps(GPS_t * gps_t);
   
 #endif // __GPS_H__

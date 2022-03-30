@@ -17,7 +17,12 @@
 #include "GPS.h"
 
 /* Dependancy objects to the GPS_t type */
-HardwareSerial serial_port(2); // Make sure to configure the corresponding pins in GPS.h (Serial0 -> 03, 01; Serial1 -> 16, 17; Serial2 -> 26, 27)
+#ifdef USE_SOFTWARE_SERIAL
+  SoftwareSerial serial_port; // Make sure to configure the corresponding pins in GPS.h
+#else
+  HardwareSerial serial_port(2); // Make sure to configure the corresponding pins in GPS.h (Serial0 -> 03, 01; Serial1 -> 16, 17; Serial2 -> 26, 27)
+#endif // USE_SOFTWARE_SERIAL
+
 TinyGPSPlus gps;
 
 /* Our GPS_t object */
@@ -103,6 +108,7 @@ void interpret_read_error(uint8_t err_code, char *buf){
 
     case ERR_GPS_DATA_INVALID:
       strcpy(buf, "Non-valid data, you're probably reading the GPS data too slowly, too fast, or unfrequently");
+      serial_clean_buffer_gps(&my_gps);
       break;
     
     case ERR_GPS_ALL_GOOD: 

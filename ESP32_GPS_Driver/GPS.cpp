@@ -20,11 +20,24 @@ static void serial_send_UBX_gps(GPS_t * gps_t, uint8_t * msg, uint8_t len){
 }
 
 /* Setup */
-void serial_init_gps(GPS_t * gps_t, TinyGPSPlus * gps_, HardwareSerial * serial_port){
+void serial_init_gps(GPS_t * gps_t, 
+                     TinyGPSPlus * gps_, 
+                     #ifdef USE_SOFTWARE_SERIAL
+                       SoftwareSerial * serial_port
+                     #else
+                       HardwareSerial * serial_port
+                     #endif // USE_SOFTWARE_SERIAL
+                     ){
 
   gps_t->serial_gps_handle = serial_port;
   gps_t->gps = gps_;
-  gps_t->serial_gps_handle->begin(GPS_BAUD_RATE, SERIAL_8N1, GPS_SER_RX, GPS_SER_TX);
+
+  #ifdef USE_SOFTWARE_SERIAL
+    gps_t->serial_gps_handle->begin(GPS_BAUD_RATE, SWSERIAL_8N1, GPS_SOFT_SER_RX, GPS_SOFT_SER_TX, INVERT_LOGIC, BUF_SIZE);
+    gps_t->serial_gps_handle->enableIntTx(false); // high speed half duplex, turn off interrupts during tx
+  #else
+    gps_t->serial_gps_handle->begin(GPS_BAUD_RATE, SERIAL_8N1, GPS_SER_RX, GPS_SER_TX);
+  #endif // USE_SOFTWARE_SERIAL
 }
 
 /* This function performs the full read of the GPS data */
@@ -96,4 +109,10 @@ void serial_wake_up_gps(GPS_t * gps_t){
   uint8_t gps_on[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00,0x09, 0x00, 0x17, 0x76};
   serial_send_UBX_gps(gps_t, gps_on, sizeof(gps_on)/sizeof(uint8_t));
   vTaskDelay(100 / portTICK_PERIOD_MS);
+}
+
+/* Flush the serial buffer */
+void serial_clean_buffer_gps(GPS_t * gps_t){
+//  gps_t->serial_gps_handle->flush();
+  while(gps_t->serial_gps_handle->available()) gps_t->serial_gps_handle->read();
 }
