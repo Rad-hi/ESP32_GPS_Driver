@@ -20,3 +20,4 @@ Only functions that I need are implemented, but many more could be depending on 
 
 This code is only tested on an ESP32, but it would probably work with an Arduino UNO (or any other one) given that the Serial port is appropriately configured.
 
+Implemented SoftwareSerial communication support for ease of portability for boards with less hardware Serial ports.
