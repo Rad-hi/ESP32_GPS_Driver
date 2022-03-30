@@ -63,25 +63,26 @@ uint8_t serial_read_gps(GPS_t * gps_t, LOCATION_t * loc, DATETIME_t * datetime, 
 
   /* All good --> Decode new data */
   
-  if(gps_t->gps->location.isUpdated()){
+  if(loc != NULL && gps_t->gps->location.isUpdated()){
     loc->lat = gps_t->gps->location.lat();
     loc->lon = gps_t->gps->location.lng();
   }
 
-  if(gps_t->gps->date.isUpdated()){
-    datetime->dd = gps_t->gps->date.day();
-    datetime->mm = gps_t->gps->date.month();
-    datetime->yy = gps_t->gps->date.year();
+  if(datetime != NULL){
+    if(gps_t->gps->date.isUpdated()){
+      datetime->dd = gps_t->gps->date.day();
+      datetime->mm = gps_t->gps->date.month();
+      datetime->yy = gps_t->gps->date.year();
+    }
+  
+    if(gps_t->gps->time.isUpdated()){
+      datetime->sc = gps_t->gps->time.second();
+      datetime->mn = gps_t->gps->time.minute();
+      datetime->hr = gps_t->gps->time.hour();
+    }
   }
 
-  if(gps_t->gps->time.isUpdated()){
-    datetime->sc = gps_t->gps->time.second();
-    datetime->mn = gps_t->gps->time.minute();
-    datetime->hr = gps_t->gps->time.hour();
-  }
-
-  /* Get speed in meters per second */
-  if(gps_t->gps->speed.isUpdated()){
+  if(speed_ != NULL && gps_t->gps->speed.isUpdated()){
     *speed_ = gps_t->gps->speed.mps();
   }
 

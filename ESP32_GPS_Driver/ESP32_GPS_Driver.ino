@@ -63,6 +63,15 @@ void loop() {
     
     /* Read & interpret the data */
     err_code = serial_read_gps(&my_gps, &current_location, &DATETIME, &speed_);
+    
+    /* You can choose which data to read:
+     * 
+     * NO SPEED: 
+     *    err_code = serial_read_gps(&my_gps, &current_location, &DATETIME, NULL);
+     * NO DATE: 
+     *    err_code = serial_read_gps(&my_gps, &current_location, NULL, &speed_);
+     */
+     
     interpret_read_error(err_code, buf);
     
     last_read = time_now;
