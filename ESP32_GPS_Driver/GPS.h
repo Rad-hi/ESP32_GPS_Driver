@@ -13,7 +13,7 @@
  */
 
 #ifndef __GPS_H__
-  #define __GPS_H__
+#define __GPS_H__
 
   #define USE_SOFTWARE_SERIAL
 
@@ -34,6 +34,7 @@
   /* GPS config params */
   #define GPS_BAUD_RATE           9600      
 
+  #define GPS_READ_FREQUENCY      200U // ms
   /* GPS error codes */
   #define ERR_GPS_DATA_INVALID    0
   #define ERR_NO_GPS_FIX          1
@@ -85,7 +86,5 @@
   
   void serial_put_to_sleep_gps(GPS_t * gps_t);
   void serial_wake_up_gps(GPS_t * gps_t);
-
-  void serial_clean_buffer_gps(GPS_t * gps_t);
   
 #endif // __GPS_H__

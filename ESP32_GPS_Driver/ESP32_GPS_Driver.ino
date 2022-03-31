@@ -1,8 +1,6 @@
 /* 
  * -----------------------------------------------------------------------------
  * GPS Driver (wrapper for TinyGPS++) made for the ESP32 dev board.
- * Probably works on an Arduino, just make sure to use the appropriate
- * Serial port, or a SoftwareSerial one.
  * -----------------------------------------------------------------------------
  * Author: Radhi SGHAIER: https://github.com/Rad-hi
  * -----------------------------------------------------------------------------
@@ -57,7 +55,7 @@ void loop() {
   /* Printing buffer */
   char buf[255];
   
-  #define READ_FREQUENCY      200U // ms --> 5Hz
+  #define READ_FREQUENCY      100U // ms --> 10Hz
   static uint32_t last_read;
   if(time_now - last_read > READ_FREQUENCY){
     
@@ -117,7 +115,6 @@ void interpret_read_error(uint8_t err_code, char *buf){
 
     case ERR_GPS_DATA_INVALID:
       strcpy(buf, "Non-valid data, you're probably reading the GPS data too slowly, too fast, or unfrequently");
-      serial_clean_buffer_gps(&my_gps);
       break;
     
     case ERR_GPS_ALL_GOOD: 
