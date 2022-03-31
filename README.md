@@ -18,6 +18,10 @@ Only functions that I need are implemented, but many more could be depending on 
 
 ## Compatibility
 
-This code is only tested on an ESP32, but it would probably work with an Arduino UNO (or any other one) given that the Serial port is appropriately configured.
+This code is only tested on an ESP32, ~but it would probably work with an Arduino UNO (or any other one) given that the Serial port is appropriately configured~ an ROTS task was created for asynchronous data parsing, hence the prohibition of compatibility with any Arduino board.
 
 Implemented SoftwareSerial communication support for ease of portability for boards with less hardware Serial ports.
+
+## How it works
+
+A timer interrupt notifies a blocked task that it could parse data (the notify frequency is configurable), and on each period, a local copy of the data is updated with the valid read data, which accessible to the main task asynchronously (non dependent from reading).
