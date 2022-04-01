@@ -51,13 +51,14 @@ void setup() {
 void loop() {
 
   uint32_t time_now = millis();
-
-  /* Printing buffer */
-  char buf[255];
   
-  #define READ_FREQUENCY      100U // ms --> 10Hz
-  static uint32_t last_read;
-  if(time_now - last_read > READ_FREQUENCY){
+  // Printing buffer
+  char buf[255];
+    
+  /* Only print once a second */
+  #define PRINT_FREQUENCY     1000U // ms
+  static uint32_t last_print;
+  if(time_now - last_print > PRINT_FREQUENCY){
     
     /* Read & interpret the data */
     err_code = serial_read_gps(&my_gps, &current_location, &DATETIME, &speed_);
@@ -69,16 +70,9 @@ void loop() {
      * NO DATE: 
      *    err_code = serial_read_gps(&my_gps, &current_location, NULL, &speed_);
      */
-     
+
     interpret_read_error(err_code, buf);
     
-    last_read = time_now;
-  }
-
-  /* Only print once a second */
-  #define PRINT_FREQUENCY     1000U // ms
-  static uint32_t last_print;
-  if(time_now - last_print > PRINT_FREQUENCY){
     Serial.println(buf);
     last_print = time_now;
   }
