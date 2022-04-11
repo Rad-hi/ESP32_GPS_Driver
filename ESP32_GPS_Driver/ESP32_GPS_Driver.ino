@@ -61,7 +61,7 @@ void loop() {
   if(time_now - last_print > PRINT_FREQUENCY){
     
     /* Read & interpret the data */
-    err_code = serial_read_gps(&my_gps, &current_location, &DATETIME, &speed_);
+    err_code = serial_read_gps(&current_location, &DATETIME, &speed_);
     
     /* You can choose which data to read:
      * 

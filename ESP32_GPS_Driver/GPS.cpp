@@ -113,8 +113,8 @@ static void gps_read_task(void *params){
 }
 
 /* Send commands to the GPS module */
-static void serial_send_UBX_gps(GPS_t * gps_t, uint8_t * msg, uint8_t len){
-  for(int i = 0; i < len; i++) gps_t->serial_gps_handle->write(msg[i]);
+static void serial_send_UBX_gps(uint8_t * msg, uint8_t len){
+  for(int i = 0; i < len; i++) local_gps_t->serial_gps_handle->write(msg[i]);
 }
 
 /* Setup */
@@ -146,7 +146,7 @@ void serial_init_gps(GPS_t * gps_t,
 }
 
 /* This function gives back the most recent GPS data */
-uint8_t serial_read_gps(GPS_t * gps_t, LOCATION_t * loc, DATETIME_t * datetime, float * speed_){
+uint8_t serial_read_gps(LOCATION_t * loc, DATETIME_t * datetime, float * speed_){
 
   xSemaphoreTake(gps_data_mutex, portMAX_DELAY);
   // Copy the most recent available data to the provided references
@@ -165,15 +165,15 @@ void serial_distance_from_to_gps(LOCATION_t * from_, LOCATION_t * to_, float * d
 
 /* Wake up/Put to sleep functions */
 
-void serial_put_to_sleep_gps(GPS_t * gps_t){
+void serial_put_to_sleep_gps(){
   /* Turn OFF RF section, Only use this if Sleep/wake cycles are longer than 30s */
   uint8_t gps_off[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00,0x08, 0x00, 0x16, 0x74};
-  serial_send_UBX_gps(gps_t, gps_off, sizeof(gps_off)/sizeof(uint8_t));
+  serial_send_UBX_gps(gps_off, sizeof(gps_off)/sizeof(uint8_t));
 }
 
-void serial_wake_up_gps(GPS_t * gps_t){
+void serial_wake_up_gps(){
   /* Turn ON RF section */
   uint8_t gps_on[] = {0xB5, 0x62, 0x06, 0x04, 0x04, 0x00, 0x00, 0x00,0x09, 0x00, 0x17, 0x76};
-  serial_send_UBX_gps(gps_t, gps_on, sizeof(gps_on)/sizeof(uint8_t));
+  serial_send_UBX_gps(gps_on, sizeof(gps_on)/sizeof(uint8_t));
   vTaskDelay(100 / portTICK_PERIOD_MS);
 }

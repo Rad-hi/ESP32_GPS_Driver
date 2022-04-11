@@ -81,10 +81,10 @@
                        #endif // USE_SOFTWARE_SERIAL
                        );
   
-  uint8_t serial_read_gps(GPS_t * gps_t, LOCATION_t * loc, DATETIME_t * datetime, float * distance);
+  uint8_t serial_read_gps(LOCATION_t * loc, DATETIME_t * datetime, float * distance);
   void serial_distance_from_to_gps(LOCATION_t * from_, LOCATION_t * to_, float * distance);
   
-  void serial_put_to_sleep_gps(GPS_t * gps_t);
-  void serial_wake_up_gps(GPS_t * gps_t);
+  void serial_put_to_sleep_gps();
+  void serial_wake_up_gps();
   
 #endif // __GPS_H__
